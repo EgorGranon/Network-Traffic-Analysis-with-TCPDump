@@ -3,10 +3,10 @@
 |     | Description |
 |-----|-------------|
 | 1-  | TCPDump Basics |
-| 2-  | Create shell script for website traffic monitor and explore more options |
-| 3-  | Create and read dump files |
-| 4-  | Create sequence of dump files with size and time limits |
-| 5-  | Advanced expressions for more filtering options |
+| 2-  | Script shell pour surveiller le trafic d'un site web et explorer davantage d'options |
+| 3-  | Créer et lire des dump files |
+| 4-  | Créer une séquence de fichiers de capture (dump files) avec des limites de taille et de temps |
+| 5-  | Créer une séquence de fichiers de capture (dump files) avec des limites de taille et de temps |
 
 ## 1- TCPDump Basics
 
@@ -42,7 +42,7 @@ TCPdump est un utilitaire largement utilisé par les professionnels de l'informa
 
 ![](https://imgur.com/pJkI56i.png)
 
-## 2- Create shell script for website traffic monitor and explore more options
+## 2- Script shell pour surveiller le trafic d'un site web et explorer davantage d'options
 
 1-Capturez quelques paquets à partir d'un site web en utilisant la commande "sudo tcpdump -#tttt host skyroute66.com -c 3" L'option -tttt affiche le résultat dans un format lisible par l'homme, en incluant les informations de temps. L'option "host" dans la commande tcpdump fait référence à la fois aux paquets source et aux paquets destination provenant ou se rendant à l'hôte spécifié (dans ce cas, skyroute66.com).
 
@@ -65,7 +65,7 @@ TCPdump est un utilitaire largement utilisé par les professionnels de l'informa
 
 ![](https://imgur.com/U62npi5.png)
 
-## 3- Create and read dump files
+## 3- Créer et lire des dump files
 
 1-Pour créer un fichier de capture (dump file), ajoutez l'option -w à la fin de votre script de capture de paquets, suivi du nom du fichier que vous souhaitez créer.
 
@@ -75,6 +75,35 @@ TCPdump est un utilitaire largement utilisé par les professionnels de l'informa
 
 ![](https://imgur.com/tIoFDZm.png)
 
-## 4- 
+## 4- Créer une séquence de fichiers de capture (dump files) avec des limites de taille et de temps
 
+Les options -C et -G sont utilisées dans la commande "sudo tcpdump -#XXtttt host skyroute66.com -w captured.pcap -C 1 -G 15". Voici leur signification :
+
+L'option -C spécifie la taille maximale du fichier de capture en mégaoctets. Dans cet exemple, -C 1 signifie que le fichier de capture sera limité à 1 mégaoctet. Lorsque cette taille est atteinte, tcpdump créera un nouveau fichier de capture avec un nom différent.
+
+L'option -G spécifie la durée maximale de capture en secondes. Dans cet exemple, -G 15 indique que la capture s'exécutera pendant 15 secondes avant de créer un nouveau fichier de capture. Cela permet de diviser automatiquement la capture en fichiers de taille et de durée gérables
+
+![](https://imgur.com/2tN3xtw.png)
+
+## 5- Script shell qui utilise des expressions avancées pour fournir plus d'options de filtrage lors de la capture de fichiers dump
+
+![](https://imgur.com/HZ22qd7.png)
+
+L'expression tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x47455420 est une expression de filtrage utilisée dans la commande tcpdump pour capturer les paquets TCP contenant un certain motif. Voici une explication détaillée de l'expression :
+
+tcp[12:1] fait référence au champ de l'en-tête TCP situé à l'offset 12, qui contient des informations sur les options de l'en-tête TCP.
+
+& 0xf0 effectue un masquage (bitwise AND) avec la valeur hexadécimale 0xf0 (ou binaire 11110000). Cela permet de conserver uniquement les 4 bits les plus significatifs (les bits 4 à 7) du champ.
+
+`>>` 2 décale les 4 bits vers la droite de 2 positions, ce qui revient à diviser la valeur par 4.
+
+Le résultat de cette opération (((tcp[12:1] & 0xf0) >> 2)) est utilisé comme indice pour accéder aux octets du flux TCP.
+
+:4 spécifie que 4 octets (32 bits) doivent être comparés.
+
+= 0x47455420 indique que la séquence d'octets recherchée est 0x47455420 (correspondant à la représentation ASCII de "GET ").
+
+En résumé, cette expression de filtrage vise à capturer les paquets TCP contenant l'en-tête "GET " dans les données de la charge utile. Cela peut être utilisé pour filtrer spécifiquement les requêtes HTTP GET dans le trafic réseau capturé.
+
+Il est important de noter que cette expression est spécifique à tcpdump et peut nécessiter des ajustements en fonction du contexte et des versions spécifiques de tcpdump utilisées.
 
