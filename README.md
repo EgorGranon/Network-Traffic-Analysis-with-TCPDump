@@ -101,7 +101,7 @@ Le résultat de cette opération (((tcp[12:1] & 0xf0) >> 2)) est utilisé comme 
 
 :4 spécifie que 4 octets (32 bits) doivent être comparés.
 
-= 0x47455420 indique que la séquence d'octets recherchée est 0x47455420 (correspondant à la représentation ASCII de "GET ").
+= 0x47455420 indique que la séquence d'octets recherchée est 0x47455420 (correspondant à la représentation ASCII de "GET").
 
 En résumé, cette expression de filtrage vise à capturer les paquets TCP contenant l'en-tête "GET " dans les données de la charge utile. Cela peut être utilisé pour filtrer spécifiquement les requêtes HTTP GET dans le trafic réseau capturé.
 
